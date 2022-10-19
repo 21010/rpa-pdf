@@ -15,3 +15,6 @@
 # temps
 /rpa_pdf/exec/sumatrapdfcache/
 /rpa_pdf/exec/SumatraPDF-settings.txt
+
+# GitHub
+/.github/
