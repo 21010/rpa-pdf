@@ -9,8 +9,8 @@
 
 # VS Code
 /.vscode/
-.vscode
-/__pychache__/
+.vscode/
+__pycache__
 
 # temps
 /rpa_pdf/exec/sumatrapdfcache/
@@ -18,3 +18,8 @@
 
 # GitHub
 /.github/
+
+# Virtual environments
+/.venv/
+/tests/inputs
+/tests/outputs

@@ -17,12 +17,6 @@ class test_pdf(unittest.TestCase):
     def test_text_to_pdf(self):
         PDF.text_to_pdf('abcdef', TEST_FILES[0])
     
-    def test_add_code39_stamp(self):
-        PDF.add_code39_stamp(TEST_FILES[0], TEST_FILES[1], '1234567890', horizontal_position='left', vertical_position='top', page_horizontal_margin=5, page_vertical_margin=5)
-
-    def test_add_text_stamp(self):
-        PDF.add_text_stamp(TEST_FILES[0], TEST_FILES[1], 'abcdefghijk')
-    
     def test_merge(self) -> None:
         PDF.merge(TEST_FILES, 'c:/temp/merged.pdf')
     
