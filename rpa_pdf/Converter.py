@@ -1,12 +1,10 @@
 
 import os
-import io
 import subprocess
 import warnings
 import comtypes.client
 from PIL import Image, ImageSequence
 from fpdf import FPDF
-import pypdf
 import pdfkit
 from .common import parse_output_file_path
 
@@ -70,7 +68,7 @@ class Converter:
         """
         try:
             image = Image.open(input_file_path)
-            
+
             images = []
             for i, page in enumerate(ImageSequence.Iterator(image)):
                 page = page.convert('RGB')
@@ -124,7 +122,7 @@ class Converter:
                 sheet.PageSetup.FitToPagesTall = 1
 
             workbook.ExportAsFixedFormat(0, output_file_path)
-        except:
+        except Exception:
             converter_path = os.path.join(self.__exec_dir__, 'docto.exe')
             parameters = f'-XL -f "{input_file_path}" -O "{output_file_path}" -T xlpdf'
             try:
@@ -184,7 +182,7 @@ class Converter:
             pdf.add_font('Dejavu Sans', '', f'{self.__fonts_dir__}\\DejaVuSans.ttf', True)
             pdf.set_font(family='Dejavu Sans', style='', size=12)
 
-            pdf.multi_cell(0,10, txt=text_content)
+            pdf.multi_cell(0, 10, txt=text_content)
 
             pdf.output(output_file_path)
 
