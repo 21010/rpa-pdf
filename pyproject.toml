@@ -4,10 +4,13 @@
 requires      = ["setuptools>=63.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [project]
 name = "rpa-pdf"
-version = "1.1.15"
-description = "Pdf actions for RPA"
+version = "1.1.16"
+description = "Comprehensive PDF manipulation and conversion toolkit designed for RPA (Robotic Process Automation) workflows."
 readme = "README.md"
 authors = [{ name = "Grzegorz Ziolo", email = "grzegorz.ziolo@gmail.com" }]
 license = { file = "LICENSE" }
@@ -23,12 +26,19 @@ dependencies = [
     "python-barcode >= 0.15.1",
     "Pillow >= 9.1.1",
     "comtypes >= 1.2.0",
-    "pdfkit >= 1.0.0"
+    "xhtml2pdf >= 0.2.16",
+    "extract-msg >= 0.45.0"
 ]
 requires-python = ">=3.10"
 
 [project.optional-dependencies]
-dev = ["black", "bumpver", "isort", "pip-tools", "unitest"]
+dev = ["ruff", "pyrefly", "bandit", "pytest"]
 
 [project.urls]
 Homepage = "https://github.com/21010/rpa-pdf"
+
+[tool.ruff]
+line-length = 120
+
+[tool.pyrefly]
+strict = true

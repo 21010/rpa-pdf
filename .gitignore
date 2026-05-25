@@ -1,25 +1,35 @@
-# Compiled python modules.
-*.pyc
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
-# Setuptools distribution folder.
+# Environments
+.venv/
+.env
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Distribution / packaging
 /dist/
+/build/
+*.egg-info/
+/.eggs/
+*.egg
 
-# Python egg metadata, regenerated from source files by setuptools.
-/*.egg-info
-
-# VS Code
-/.vscode/
+# Editor directories
 .vscode/
-__pycache__
+.idea/
 
-# temps
-/rpa_pdf/exec/sumatrapdfcache/
-/rpa_pdf/exec/SumatraPDF-settings.txt
+# Testing output
+/tests/inputs/
+/tests/outputs/
 
-# GitHub
-/.github/
+# Legacy exec folder / cache
+/rpa_pdf/exec/
 
-# Virtual environments
-/.venv/
-/tests/inputs
-/tests/outputs
+# Sumatra
+/src/rpa_pdf/exec/sumatrapdfcache/
+/src/rpa_pdf/exec/SumatraPDF-settings.txt
