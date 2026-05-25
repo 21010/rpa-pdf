@@ -10,26 +10,29 @@ from .common import set_x_pos, set_y_pos
 
 pdf = Pdf()
 
-class Stamp():
-    """ Stamp class """
+
+class Stamp:
+    """Stamp class"""
+
     def __init__(self) -> None:
         self.__root_dir__: str = os.path.dirname(os.path.abspath(__file__))
-        self.__fonts_dir__: str = os.path.join(self.__root_dir__, 'fonts')
-        self.__exec_dir__: str = os.path.join(self.__root_dir__, 'exec')
+        self.__fonts_dir__: str = os.path.join(self.__root_dir__, "fonts")
+        self.__exec_dir__: str = os.path.join(self.__root_dir__, "exec")
 
-    def generate_code39_stamp(self,
+    def generate_code39_stamp(
+        self,
         code: str,
         output_file_path: str,
-        output_file_format: Literal['pdf', 'png'] = 'pdf',
+        output_file_format: Literal["pdf", "png"] = "pdf",
         width: float = 40.0,
         height: float = 20.0,
-        vertical_position: Literal['top', 'center', 'bottom'] = 'top',
-        horizontal_position: Literal['left', 'center', 'right'] = 'left',
-        page_orientation: Literal['portrait', 'landscape'] = 'portrait',
-        page_units: Literal['mm', 'pt', 'cm', 'in'] = 'mm',
-        page_format: Literal['A3', 'A4', 'A5', 'Letter', 'Legal'] | tuple[float, float] = 'A4',
+        vertical_position: Literal["top", "center", "bottom"] = "top",
+        horizontal_position: Literal["left", "center", "right"] = "left",
+        page_orientation: Literal["portrait", "landscape"] = "portrait",
+        page_units: Literal["mm", "pt", "cm", "in"] = "mm",
+        page_format: Literal["A3", "A4", "A5", "Letter", "Legal"] | tuple[float, float] = "A4",
         page_vertical_margin: int = 0,
-        page_horizontal_margin: int = 0
+        page_horizontal_margin: int = 0,
     ):
         """
         Generates CODE39 stamp as image (png) or pdf file.
@@ -49,10 +52,12 @@ class Stamp():
             page_horizontal_margin (int, optional): horizontal position; can be used to move the barcode left or right. Defaults to 0.
         """
         # render barcode image
-        barcode_image_path: str = tempfile.gettempdir() + '\\barcode.png' if output_file_format == 'pdf' else output_file_path
-        with open(barcode_image_path, 'wb') as f:
+        barcode_image_path: str = (
+            tempfile.gettempdir() + "\\barcode.png" if output_file_format == "pdf" else output_file_path
+        )
+        with open(barcode_image_path, "wb") as f:
             Code39(code=code, writer=ImageWriter(), add_checksum=False).write(f)  # type: ignore
-        if output_file_format == 'png':
+        if output_file_format == "png":
             return
 
         # generate a stamp pdf file
@@ -65,7 +70,7 @@ class Stamp():
             y=set_y_pos(vertical_position, page_vertical_margin, fpdf.h, height),
             w=width,
             h=height,
-            type='PNG'
+            type="PNG",
         )
         fpdf.output(output_file_path)
 
@@ -76,19 +81,19 @@ class Stamp():
         code: str,
         width: float = 40,
         height: float = 20,
-        apply_for_pages: Literal['all', 'first', 'last'] | list[int] = 'first',
+        apply_for_pages: Literal["all", "first", "last"] | list[int] = "first",
         remove_input_file: bool = False,
-        vertical_position: Literal['top', 'center', 'bottom'] = 'top',
-        horizontal_position: Literal['left', 'center', 'right'] = 'left',
-        page_orientation: Literal['portrait', 'landscape'] = 'portrait',
-        page_units: Literal['mm', 'pt', 'cm', 'in'] = 'mm',
-        page_format: Literal['A3', 'A4', 'A5', 'Letter', 'Legal'] | tuple[float, float] = 'A4',
+        vertical_position: Literal["top", "center", "bottom"] = "top",
+        horizontal_position: Literal["left", "center", "right"] = "left",
+        page_orientation: Literal["portrait", "landscape"] = "portrait",
+        page_units: Literal["mm", "pt", "cm", "in"] = "mm",
+        page_format: Literal["A3", "A4", "A5", "Letter", "Legal"] | tuple[float, float] = "A4",
         page_vertical_margin: int = 0,
-        page_horizontal_margin: int = 0
+        page_horizontal_margin: int = 0,
     ) -> None:
         """
         Add CODE39 barcode to the pdf file and save the output as a new pdf file.
-        
+
         Args:
             input_pdf_file_path (str): input pdf file path (to which the barcode will be added)
             output_pdf_file_path (str): output pdf file path
@@ -111,14 +116,14 @@ class Stamp():
         try:
             # check if input file exists
             if os.path.exists(input_pdf_file_path) is False:
-                raise FileNotFoundError(f'{input_pdf_file_path} doesn\'t exist')
-            
+                raise FileNotFoundError(f"{input_pdf_file_path} doesn't exist")
+
             # render barcode pdf file
-            stamp: str = f'{tempfile.gettempdir()}\\stamp.pdf'
+            stamp: str = f"{tempfile.gettempdir()}\\stamp.pdf"
             self.generate_code39_stamp(
                 code=code,
                 output_file_path=stamp,
-                output_file_format='pdf',
+                output_file_format="pdf",
                 width=width,
                 height=height,
                 vertical_position=vertical_position,
@@ -127,12 +132,12 @@ class Stamp():
                 page_units=page_units,
                 page_format=page_format,
                 page_vertical_margin=page_vertical_margin,
-                page_horizontal_margin=page_horizontal_margin
+                page_horizontal_margin=page_horizontal_margin,
             )
 
             # check if stamp file was generated
             if os.path.exists(stamp) is False:
-                raise FileNotFoundError(f'file {stamp} has not been generated')
+                raise FileNotFoundError(f"file {stamp} has not been generated")
 
             # get watermark page
             watermark_reader = PdfReader(stamp)
@@ -144,18 +149,18 @@ class Stamp():
             # get indexes of pages where the stamp should be added
             if not isinstance(apply_for_pages, list):
                 match apply_for_pages:
-                    case 'all':
+                    case "all":
                         apply_for_pages = list(range(0, len(pdf_document.pages)))
-                    case 'last':
+                    case "last":
                         apply_for_pages = [-1]
-                    case 'first':
+                    case "first":
                         apply_for_pages = [0]
                     case _:
-                        raise ValueError('incorrect value of apply_for_pages argument')
+                        raise ValueError("incorrect value of apply_for_pages argument")
 
             # prepare output pdf
             output = PdfWriter()
-            
+
             for index, page in enumerate(pdf_document.pages):
                 if index in apply_for_pages:
                     page.merge_page(watermark)
@@ -170,7 +175,7 @@ class Stamp():
                     os.remove(stamp)
                 if remove_input_file and os.path.exists(input_pdf_file_path):
                     os.remove(input_pdf_file_path)
-            except (FileNotFoundError) as ex:
+            except FileNotFoundError as ex:
                 print(ex)
         except Exception as ex:
             raise ex
@@ -179,21 +184,24 @@ class Stamp():
         self,
         input_pdf_file_path: str,
         output_pdf_file_path: str,
-        text: str, *,
-        apply_for_pages: Literal['all', 'first', 'last'] | list[int] = 'first',
+        text: str,
+        *,
+        apply_for_pages: Literal["all", "first", "last"] | list[int] = "first",
         remove_input_file: bool = False,
-        font_family: str = 'DejaVu',
+        font_family: str = "DejaVu",
         font_file_path: str | bool = False,
         font_unicode: bool = True,
-        font_style: Literal["", "B", "I", "U", "BU", "UB", "BI", "IB", "IU", "UI", "BIU", "BUI", "IBU", "IUB", "UBI", "UIB"] = '',
+        font_style: Literal[
+            "", "B", "I", "U", "BU", "UB", "BI", "IB", "IU", "UI", "BIU", "BUI", "IBU", "IUB", "UBI", "UIB"
+        ] = "",
         font_size: int = 12,
-        text_vertical_position: Literal['top', 'center', 'bottom'] = 'top',
-        text_horizontal_position: Literal['left', 'center', 'right'] = 'left',
-        page_orientation: Literal['portrait', 'landscape'] = 'portrait',
-        page_units: Literal['mm', 'pt', 'cm', 'in'] = 'mm',
-        page_format: Literal['A3', 'A4', 'A5', 'Letter', 'Legal'] | tuple[float, float] = 'A4',
+        text_vertical_position: Literal["top", "center", "bottom"] = "top",
+        text_horizontal_position: Literal["left", "center", "right"] = "left",
+        page_orientation: Literal["portrait", "landscape"] = "portrait",
+        page_units: Literal["mm", "pt", "cm", "in"] = "mm",
+        page_format: Literal["A3", "A4", "A5", "Letter", "Legal"] | tuple[float, float] = "A4",
         page_vertical_margin: int = 10,
-        page_horizontal_margin: int = 10
+        page_horizontal_margin: int = 10,
     ) -> None:
         """
         Add text (watermark/stamp) to the pdf document.
@@ -231,7 +239,7 @@ class Stamp():
                 raise FileNotFoundError
 
             # generate watermark pdf
-            watermark_pdf_file_path = tempfile.gettempdir() + '\\stamp.pdf'
+            watermark_pdf_file_path = tempfile.gettempdir() + "\\stamp.pdf"
             pdf.text_to_pdf(
                 text=text,
                 output_file_path=watermark_pdf_file_path,
@@ -246,7 +254,7 @@ class Stamp():
                 page_units=page_units,
                 page_format=page_format,
                 page_vertical_margin=page_vertical_margin,
-                page_horizontal_margin=page_horizontal_margin
+                page_horizontal_margin=page_horizontal_margin,
             )
 
             # get watermark page
@@ -259,9 +267,9 @@ class Stamp():
             # get indexes of pages where the stamp should be added
             if not isinstance(apply_for_pages, list):
                 match apply_for_pages:
-                    case 'all':
+                    case "all":
                         apply_for_pages = list(range(0, len(pdf_document.pages)))
-                    case 'last':
+                    case "last":
                         apply_for_pages = [-1]
                     case _:
                         apply_for_pages = [0]

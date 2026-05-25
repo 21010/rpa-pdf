@@ -1,19 +1,22 @@
 """
 Pdf module provides features to work with pdf files: merge pdfs, add stamps, print to the printer
 """
+
 import os.path
 from typing import Literal
-import subprocess
+import subprocess  # nosec B404
 from pypdf import PdfReader, PdfWriter
 from fpdf import FPDF
 from .common import set_x_pos, set_y_pos
 
-class Pdf():
-    """ Pdf class """
+
+class Pdf:
+    """Pdf class"""
+
     def __init__(self) -> None:
         self.__root_dir__: str = os.path.dirname(os.path.abspath(__file__))
-        self.__fonts_dir__: str = os.path.join(self.__root_dir__, 'fonts')
-        self.__exec_dir__: str = os.path.join(self.__root_dir__, 'exec')
+        self.__fonts_dir__: str = os.path.join(self.__root_dir__, "fonts")
+        self.__exec_dir__: str = os.path.join(self.__root_dir__, "exec")
 
     def compress(self, pdf_file_path: str) -> None:
         """
@@ -28,14 +31,14 @@ class Pdf():
         """
         try:
             if os.path.exists(pdf_file_path) is False:
-                raise FileNotFoundError(f'{pdf_file_path} does not exist')
+                raise FileNotFoundError(f"{pdf_file_path} does not exist")
 
             writer = PdfWriter()
             reader = PdfReader(pdf_file_path)
             writer.clone_document_from_reader(reader)
             for page in writer.pages:
                 page.compress_content_streams()
-            with open(pdf_file_path, 'wb') as pdf:
+            with open(pdf_file_path, "wb") as pdf:
                 writer.write(pdf)
         except Exception as ex:
             raise ex
@@ -44,18 +47,20 @@ class Pdf():
         self,
         text: str,
         output_file_path: str,
-        font_family: str = 'DejaVu Sans',
+        font_family: str = "DejaVu Sans",
         font_file_path: str | bool = False,
         font_unicode: bool = True,
-        font_style: Literal['', 'B', 'I', 'U', 'BU', 'UB', 'BI', 'IB', 'IU', 'UI', 'BIU', 'BUI', 'IBU', 'IUB', 'UBI', 'UIB'] = '',
+        font_style: Literal[
+            "", "B", "I", "U", "BU", "UB", "BI", "IB", "IU", "UI", "BIU", "BUI", "IBU", "IUB", "UBI", "UIB"
+        ] = "",
         font_size: int = 12,
-        text_vertical_position: Literal['top', 'center', 'bottom'] = 'top',
-        text_horizontal_position: Literal['left', 'center', 'right'] = 'left',
-        page_orientation: Literal['portrait', 'landscape'] = 'portrait',
-        page_units: Literal['mm', 'pt', 'cm', 'in'] = 'mm',
-        page_format: Literal['A3', 'A4', 'A5', 'Letter', 'Legal'] | tuple[float, float] = 'A4',
+        text_vertical_position: Literal["top", "center", "bottom"] = "top",
+        text_horizontal_position: Literal["left", "center", "right"] = "left",
+        page_orientation: Literal["portrait", "landscape"] = "portrait",
+        page_units: Literal["mm", "pt", "cm", "in"] = "mm",
+        page_format: Literal["A3", "A4", "A5", "Letter", "Legal"] | tuple[float, float] = "A4",
         page_vertical_margin: int = 10,
-        page_horizontal_margin: int = 10
+        page_horizontal_margin: int = 10,
     ) -> None:
         """
         Convert text to pdf file.
@@ -80,7 +85,11 @@ class Pdf():
             fpdf: FPDF = FPDF(orientation=page_orientation, unit=page_units, format=page_format)
             fpdf.compress = True
             # set style and size of font that you want in the pdf
-            fpdf.add_font(font_family, '', font_file_path if isinstance(font_file_path, str) else f'{self.__fonts_dir__}\\DejaVuSans.ttf')
+            fpdf.add_font(
+                font_family,
+                "",
+                font_file_path if isinstance(font_file_path, str) else f"{self.__fonts_dir__}\\DejaVuSans.ttf",
+            )
             fpdf.set_font(family=font_family, style=font_style, size=font_size)
             # add a page
             fpdf.add_page()
@@ -113,7 +122,7 @@ class Pdf():
             # check if input file exists
             for file_path in pdf_files:
                 if os.path.exists(file_path) is False:
-                    raise FileNotFoundError(f'{file_path} does not exist')
+                    raise FileNotFoundError(f"{file_path} does not exist")
 
             merge_file = PdfWriter()
             for pdf_file in pdf_files:
@@ -123,21 +132,21 @@ class Pdf():
             merge_file.close()
 
             if os.path.exists(output_pdf_file_path) is False:
-                raise FileExistsError(f'{output_pdf_file_path} was not generated.')
+                raise FileExistsError(f"{output_pdf_file_path} was not generated.")
         except Exception as ex:
             raise ex
 
     def print(
         self,
         pdf_file_path: str,
-        printer: str = 'default',
-        pages: Literal['all', 'first', 'last'] | list = 'all',
-        odd_or_even: Literal['odd', 'even'] | bool = False,
-        orientation: Literal['portrait', 'landscape'] = 'portrait',
-        scale: Literal['noscale', 'shrink', 'fit'] = 'fit',
-        color: Literal['color', 'monochrome'] = 'color',
-        mode: Literal['duplex', 'duplexshort', 'duplexshort', 'simplex'] = 'simplex',
-        paper: Literal['A2', 'A3', 'A4', 'A5', 'A6', 'letter', 'legal', 'tabloid', 'statement'] = 'A4'
+        printer: str = "default",
+        pages: Literal["all", "first", "last"] | list = "all",
+        odd_or_even: Literal["odd", "even"] | bool = False,
+        orientation: Literal["portrait", "landscape"] = "portrait",
+        scale: Literal["noscale", "shrink", "fit"] = "fit",
+        color: Literal["color", "monochrome"] = "color",
+        mode: Literal["duplex", "duplexshort", "duplexshort", "simplex"] = "simplex",
+        paper: Literal["A2", "A3", "A4", "A5", "A6", "letter", "legal", "tabloid", "statement"] = "A4",
     ) -> None:
         """
         Print PDF document.
@@ -160,15 +169,15 @@ class Pdf():
         """
         # check if input file exists
         if os.path.exists(pdf_file_path) is False:
-            raise FileNotFoundError(f'{pdf_file_path} does not exist')
+            raise FileNotFoundError(f"{pdf_file_path} does not exist")
 
-        sumatra_path: str = f'{self.__exec_dir__}\\sumatra.exe'
-        
+        sumatra_path: str = f"{self.__exec_dir__}\\sumatra.exe"
+
         args = [sumatra_path]
-        if printer == 'default':
-            args.append('-print-to-default')
+        if printer == "default":
+            args.append("-print-to-default")
         else:
-            args.extend(['-print-to', printer])
+            args.extend(["-print-to", printer])
 
         settings: list = []
         # page range to print
@@ -183,15 +192,17 @@ class Pdf():
                 case "all":
                     settings.append("*")
                 case _:
-                    raise ValueError("incorrect range of pages to print; correct vaules: all, first, last, or list (ex. [1,2,3-5,-1])")
+                    raise ValueError(
+                        "incorrect range of pages to print; correct vaules: all, first, last, or list (ex. [1,2,3-5,-1])"
+                    )
 
         # page to print: odd or even or all
         if isinstance(odd_or_even, str):
             match odd_or_even.lower():
-                case 'odd':
-                    settings.append('odd')
-                case 'even':
-                    settings.append('even')
+                case "odd":
+                    settings.append("odd")
+                case "even":
+                    settings.append("even")
                 case _:
                     raise ValueError("incorrect value for odd_or_even attribute; correct values: odd, even")
 
@@ -208,11 +219,11 @@ class Pdf():
         settings.append(mode)
 
         # paper size
-        settings.append(f'paper={paper}')
+        settings.append(f"paper={paper}")
 
-        args.extend(['-print-settings', ",".join(settings), '-silent', pdf_file_path])
+        args.extend(["-print-settings", ",".join(settings), "-silent", pdf_file_path])
 
         try:
-            subprocess.run(args, check=True) # nosec B603
+            subprocess.run(args, check=True)  # nosec B603
         except subprocess.CalledProcessError as ex:
             raise ex

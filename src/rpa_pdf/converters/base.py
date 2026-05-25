@@ -1,13 +1,17 @@
 from abc import ABC, abstractmethod
 import os
 
+
 class BaseConverter(ABC):
     @abstractmethod
     def convert(self, input_file_path: str, output_file_path: str | None = None) -> None:
         pass
 
-    def _get_output_path(self, input_file_path: str, output_file_path: str | None = None, index: int | None = None) -> str:
+    def _get_output_path(
+        self, input_file_path: str, output_file_path: str | None = None, index: int | None = None
+    ) -> str:
         from rpa_pdf.common import parse_output_file_path
+
         directory, filename = os.path.split(parse_output_file_path(input_file_path, output_file_path))
         filename_parts = os.path.splitext(filename)
 
