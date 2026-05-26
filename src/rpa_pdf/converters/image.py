@@ -1,4 +1,5 @@
 from PIL import Image, ImageSequence
+import PIL.JpegImagePlugin
 from rpa_pdf.converters.base import BaseConverter
 
 
