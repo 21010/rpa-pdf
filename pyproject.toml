@@ -9,7 +9,7 @@ where = ["src"]
 
 [project]
 name = "rpa-pdf"
-version = "2.0.1"
+version = "2.0.2"
 description = "Comprehensive PDF manipulation and conversion toolkit designed for RPA (Robotic Process Automation) workflows."
 readme = "README.md"
 authors = [{ name = "Grzegorz Ziolo", email = "grzegorz.ziolo@gmail.com" }]
