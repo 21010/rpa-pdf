@@ -1,5 +1,5 @@
 from PIL import Image, ImageSequence
-import PIL.JpegImagePlugin
+import PIL.JpegImagePlugin  # noqa: F401 needed to open jpg files
 from rpa_pdf.converters.base import BaseConverter
 
 

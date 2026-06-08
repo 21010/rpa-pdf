@@ -1,6 +1,6 @@
 import os
 import warnings
-from typing import Optional
+from typing import Optional, Type
 
 from .base import BaseConverter
 from .image import ImageConverter
@@ -10,27 +10,47 @@ from .text import TextConverter
 from .email import EmailConverter
 from rpa_pdf.common import parse_output_file_path
 
+# Converter Registry mapping extensions to Converter classes
+_CONVERTER_REGISTRY: dict[str, Type[BaseConverter]] = {
+    ".doc": WordConverter,
+    ".docx": WordConverter,
+    ".rtf": WordConverter,
+    ".xls": ExcelConverter,
+    ".xlsx": ExcelConverter,
+    ".xlsm": ExcelConverter,
+    ".ods": ExcelConverter,
+    ".csv": ExcelConverter,
+    ".ppt": PowerPointConverter,
+    ".pptx": PowerPointConverter,
+    ".pptm": PowerPointConverter,
+    ".ppsx": PowerPointConverter,
+    ".png": ImageConverter,
+    ".jpg": ImageConverter,
+    ".jpeg": ImageConverter,
+    ".gif": ImageConverter,
+    ".tiff": ImageConverter,
+    ".bmp": ImageConverter,
+    ".tif": ImageConverter,
+    ".msg": EmailConverter,
+    ".eml": EmailConverter,
+    ".html": HtmlConverter,
+    ".htm": HtmlConverter,
+    ".txt": TextConverter,
+}
+
 
 class Converter:
+    @classmethod
+    def register_converter(cls, ext: str, converter_class: Type[BaseConverter]) -> None:
+        """Registers a new converter class for a specific file extension (e.g., '.pdf')."""
+        _CONVERTER_REGISTRY[ext.lower()] = converter_class
+
     def get_converter(self, input_file_path: str) -> Optional[BaseConverter]:
         ext = os.path.splitext(input_file_path)[1].lower()
-        match ext:
-            case ".doc" | ".docx" | ".rtf":
-                return WordConverter()
-            case ".xls" | ".xlsx" | ".xlsm" | ".ods" | ".csv":
-                return ExcelConverter()
-            case ".ppt" | ".pptx" | ".pptm" | ".ppsx":
-                return PowerPointConverter()
-            case ".png" | ".jpg" | ".jpeg" | ".gif" | ".tiff" | ".bmp" | ".tif":
-                return ImageConverter()
-            case ".msg" | ".eml":
-                return EmailConverter()
-            case ".html" | ".htm":
-                return HtmlConverter()
-            case ".txt":
-                return TextConverter()
-            case _:
-                return None
+        converter_class = _CONVERTER_REGISTRY.get(ext)
+        if converter_class:
+            return converter_class()
+        return None
 
     def convert(self, input_file_path: str, output_file_path: str | None = None, index: int | None = None) -> bool:
         if not os.path.exists(input_file_path):

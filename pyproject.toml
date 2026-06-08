@@ -9,7 +9,7 @@ where = ["src"]
 
 [project]
 name = "rpa-pdf"
-version = "2.0.2"
+version = "2.0.3"
 description = "Comprehensive PDF manipulation and conversion toolkit designed for RPA (Robotic Process Automation) workflows."
 readme = "README.md"
 authors = [{ name = "Grzegorz Ziolo", email = "grzegorz.ziolo@gmail.com" }]
@@ -25,20 +25,29 @@ dependencies = [
     "fpdf2 >= 2.7.5",
     "python-barcode >= 0.15.1",
     "Pillow >= 9.1.1",
-    "comtypes >= 1.2.0",
     "xhtml2pdf >= 0.2.16",
     "extract-msg >= 0.45.0",
+    "comtypes>=1.4.16",
 ]
 requires-python = ">=3.10"
 
-[project.optional-dependencies]
-dev = ["ruff", "pyrefly", "bandit", "pytest"]
-
 [project.urls]
 Homepage = "https://github.com/21010/rpa-pdf"
+
+[dependency-groups]
+dev = [
+    "bandit>=1.9.4",
+    "pyrefly>=1.0.0",
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.15.14",
+]
 
 [tool.ruff]
 line-length = 120
 
 [tool.pyrefly]
 strict = true
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv", ".pytest_cache", ".ruff_cache", "dist"]

@@ -1,5 +1,9 @@
 import os
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+FONTS_DIR = os.path.join(ROOT_DIR, "fonts")
+EXEC_DIR = os.path.join(ROOT_DIR, "exec")
+
 
 def set_x_pos(horizontal_position, page_horizontal_margin, page_width, stamp_width) -> float:
     match horizontal_position:
